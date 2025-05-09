@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RGICS – Ticket Booking</title>
+  <style>
+    :root {
+      --stadium-diameter: 620px;
+      --primary: #3742fa;
+      --platinum: #ffd700;
+      --gold: #ffb700;
+      --silver: #c0c0c0;
+      --general: #8dd3ff;
+      --student: #baffc9;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f7fa;
+      color: #2f3542;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem 4rem;
+      line-height: 1.5;
+    }
+
+    h1, h2 {
+      text-align: center;
+      margin: 0.5rem 0 1rem;
+    }
+
+    .stadium-wrapper {
+      position: relative;
+      width: var(--stadium-diameter);
+      height: var(--stadium-diameter);
+      margin: 2rem 0;
+    }
+
+    .ring {
+      position: absolute;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+
+    .ring:hover {
+      transform: scale(1.03);
+    }
+
+    .ring[data-label]:hover::after {
+      content: attr(data-label);
+      position: absolute;
+      top: -1.7rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #000;
+      color: #fff;
+      font-size: 0.75rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .ring-1 { width: 100%; height: 100%; background: var(--student) }
+    .ring-2 { width: 85%; height: 85%; background: var(--general) }
+    .ring-3 { width: 70%; height: 70%; background: var(--silver) }
+    .ring-4 { width: 55%; height: 55%; background: var(--gold) }
+    .ring-5 { width: 40%; height: 40%; background: var(--platinum) }
+    .ring-6 { width: 25%; height: 25%; background: var(--student) }
+
+    .pitch {
+      width: 20%;
+      height: 50%;
+      background: #d2b48c;
+      border: 4px solid #b2966f;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    .compass-marker {
+      position: absolute;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #000;
+      text-shadow: 0 0 3px #fff;
+    }
+
+    .marker-n { top: -2rem; left: 50%; transform: translateX(-50%) }
+    .marker-s { bottom: -2rem; left: 50%; transform: translateX(-50%) }
+    .marker-e { right: -2rem; top: 50%; transform: translateY(-50%) }
+    .marker-w { left: -2rem; top: 50%; transform: translateY(-50%) }
+
+    .legend {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 0.5rem;
+      max-width: 600px;
+      width: 100%;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      font-size: 0.9rem;
+      gap: 0.4rem;
+      background: #fff;
+      padding: 0.4rem 0.6rem;
+      border-radius: 6px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+
+    .swatch {
+      width: 18px;
+      height: 18px;
+      border-radius: 3px;
+    }
+
+    table {
+      width: 100%;
+      max-width: 900px;
+      border-collapse: collapse;
+      margin: 2rem 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+    }
+
+    th {
+      background: var(--primary);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    tr:nth-child(even) td {
+      background: #f1f2f6;
+    }
+
+    tr:hover td {
+      background: #dfe4ff;
+    }
+
+    .continue-button {
+      display: inline-block;
+      background-color: #28a745;
+      color: white;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+      margin-top: 20px;
+    }
+
+    .continue-button:hover {
+      background-color: #218838;
+    }
+
+    .back-button-container {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+
+    .back-button {
+      background-color: #FF3300;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      text-decoration: none;
+    }
+
+    .back-button:hover {
+      background-color: #333;
+    }
+
+    @media(max-width:700px){
+      :root { --stadium-diameter:90vw }
+    }
+  </style>
+</head>
+<body>
+  <div class="back-button-container">
+    <a href="stadium.html" class="back-button">← GO TO BACK</a>
+  </div>
+
+  <h1>Rajiv Gandhi International Cricket Stadium</h1>
+  <p>Seating Layout and Ticket Booking</p>
+
+  <!-- Stadium Layout -->
+  <section class="stadium-wrapper" aria-label="Stadium seating schematic">
+    <span class="compass-marker marker-n">N</span>
+    <span class="compass-marker marker-s">S</span>
+    <span class="compass-marker marker-e">E</span>
+    <span class="compass-marker marker-w">W</span>
+    <div class="ring ring-1" data-label="Student">
+      <div class="ring ring-2" data-label="General">
+        <div class="ring ring-3" data-label="Silver">
+          <div class="ring ring-4" data-label="Gold">
+            <div class="ring ring-5" data-label="Platinum">
+              <div class="ring ring-6" data-label="Student">
+                <div class="pitch" aria-label="Cricket pitch"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-item"><span class="swatch" style="background:var(--platinum)"></span> Platinum</div>
+    <div class="legend-item"><span class="swatch" style="background:var(--gold)"></span> Gold</div>
+    <div class="legend-item"><span class="swatch" style="background:var(--silver)"></span> Silver</div>
+    <div class="legend-item"><span class="swatch" style="background:var(--general)"></span> General</div>
+    <div class="legend-item"><span class="swatch" style="background:var(--student)"></span> Student</div>
+  </div>
+
+  <!-- Ticket Pricing -->
+  <h2>Ticket Pricing</h2>
+  <table>
+    <thead>
+      <tr><th>Section</th><th>Stand</th><th>Seat Type</th><th>Price</th><th>Available</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Platinum</td><td>West Pavilion</td><td>Chair</td><td>₹8,000</td><td>4000</td></tr>
+      <tr><td>Gold</td><td>North Stand</td><td>Chair</td><td>₹5,000</td><td>4000</td></tr>
+      <tr><td>Silver</td><td>South Stand</td><td>Bench</td><td>₹3,000</td><td>4000</td></tr>
+      <tr><td>General</td><td>East Stand</td><td>Bench</td><td>₹1,500</td><td>4000</td></tr>
+      <tr><td>Student</td><td>Grass Bank</td><td>Lawn</td><td>₹500</td><td>4000</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Continue Button -->
+  <div style="text-align: center;">
+    <a href="booking.html" class="continue-button">🎟 Stadium Ticket Booking</a>
+  </div>
+</body>
+</html>
