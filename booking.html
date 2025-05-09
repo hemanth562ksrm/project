@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stadium Ticket Booking</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #f2f7fa, #fce0f2);
+      padding: 2rem;
+      color: #333;
+    }
+     .back-button-container {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .back-button {
+      background-color: #FF3300;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      text-decoration: none;
+    }
+    .back-button:hover {
+      background-color: #333;
+    }
+    h1, h2 {
+      color: #ff4081;
+      text-align: center;
+    }
+    .section, .booking-form {
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border: 2px solid #ff4081;
+    }
+    .section h3 {
+      color: #ff9800;
+      margin-bottom: 1rem;
+    }
+    .seat-grid {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 10px;
+      justify-items: center;
+      margin: 1rem 0;
+    }
+    .seat {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #ddd;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+    .available {
+      background-color: white;
+    }
+    .available:hover {
+      background-color: #90EE90;
+      transform: scale(1.1);
+    }
+    .selected {
+      background-color: #90EE90;
+    }
+    .unavailable {
+      background-color: red;
+      cursor: not-allowed;
+    }
+    select, input[type="text"], input[type="email"], input[type="tel"], input[type="date"], input[type="time"], button {
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border-radius: 5px;
+      font-size: 1rem;
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid #ddd;
+    }
+    select, button {
+      background-color: #ff4081;
+      color: white;
+      border: none;
+    }
+    select:hover, button:hover {
+      background-color: #f50057;
+    }
+    .error {
+      color: red;
+      font-size: 0.9rem;
+      display: none;
+    }
+    .total-amount-box {
+      background-color: #ffeb3b;
+      padding: 1rem;
+      font-weight: bold;
+      border-radius: 5px;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .booking-form button {
+      background-color: #388e3c;
+      color: white;
+      border: none;
+      font-size: 1.2rem;
+      padding: 1rem;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+    .booking-form button:hover {
+      background-color: #87CEEB;
+    }
+    .form-container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+ 
+  <div class="back-button-container">
+    <a href="tickets.html" class="back-button">← Back to stadium</a>
+  </div>
+
+  <h1>Stadium Ticket Booking</h1>
+
+  <div class="form-container">
+    <div class="section">
+      <label for="sectionSelect">Select Ticket Section:</label>
+      <select id="sectionSelect">
+        <option value="">-- Select Section --</option>
+        <option value="Platinum">Platinum</option>
+        <option value="Gold">Gold</option>
+        <option value="Silver">Silver</option>
+        <option value="General">General</option>
+        <option value="Student">Student</option>
+      </select>
+
+      <label for="directionSelect">Select Direction:</label>
+      <select id="directionSelect" disabled>
+        <option value="">-- Select Direction --</option>
+        <option value="North-East">North-East</option>
+        <option value="East-South">East-South</option>
+        <option value="South-West">South-West</option>
+        <option value="West-North">West-North</option>
+      </select>
+    </div>
+
+    <div id="sections"></div>
+
+    <hr>
+
+    <h2>Book Your Tickets</h2>
+    <form class="booking-form" id="bookingForm" novalidate>
+      <label for="name">Full Name</label>
+      <input type="text" id="name" required />
+      <span class="error" id="nameError">Please enter your name.</span>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" required />
+      <span class="error" id="emailError">Please enter a valid email.</span>
+
+      <label for="phone">Phone</label>
+      <input type="tel" id="phone" pattern="[6-9]{1}[0-9]{9}" maxlength="10" required />
+      <span class="error" id="phoneError">Enter a valid 10-digit number.</span>
+
+      <label for="date">Match Date</label>
+      <input type="date" id="date" required />
+      <span class="error" id="dateError">Please select a date.</span>
+
+      <label for="time">Match Time</label>
+      <input type="time" id="time" required />
+      <span class="error" id="timeError">Please select a time.</span>
+
+      <div class="total-amount-box" id="seatStats">Total: 0 | Available: 0 | Booked: 0 | Selected: 0</div>
+      <div class="total-amount-box" id="seatCount">Selected Tickets: 0</div>
+      <div class="total-amount-box" id="totalAmount">Total Amount: ₹0</div>
+
+      <button type="submit">Book Now</button>
+    </form>
+  </div>
+
+  <script>
+    const seatSections = ["Platinum", "Gold", "Silver", "General", "Student"];
+    const directions = ["North-East", "East-South", "South-West", "West-North"];
+    const totalSeatsPerDirection = 1000;
+    const bookedSeatsPerBlock = 50;
+
+    const state = {
+      seats: {},
+      selected: new Set(),
+      currentSection: "",
+      currentDirection: ""
+    };
+
+    const priceMap = {
+      Platinum: 8000,
+      Gold: 5000,
+      Silver: 3000,
+      General: 1500,
+      Student: 500
+    };
+
+    function generateSeats() {
+      seatSections.forEach(section => {
+        state.seats[section] = {};
+        directions.forEach(dir => {
+          state.seats[section][dir] = [];
+          for (let i = 1; i <= totalSeatsPerDirection; i++) {
+            const seatId = `${section}-${dir}-${i}`;
+            const isBooked = i <= bookedSeatsPerBlock;
+            state.seats[section][dir].push({
+              id: seatId,
+              selected: false,
+              available: !isBooked
+            });
+          }
+        });
+      });
+    }
+
+    function renderSections() {
+      const container = document.getElementById("sections");
+      container.innerHTML = "";
+      const section = state.currentSection;
+      const direction = state.currentDirection;
+      if (!section || !direction) return;
+
+      const sectionDiv = document.createElement("div");
+      sectionDiv.className = "section";
+      sectionDiv.innerHTML = `<h3>${section} – ${direction}</h3>`;
+
+      const grid = document.createElement("div");
+      grid.className = "seat-grid";
+
+      state.seats[section][direction].forEach(seat => {
+        const seatEl = document.createElement("div");
+        seatEl.className = "seat " + (seat.available ? (seat.selected ? "selected" : "available") : "unavailable");
+        seatEl.textContent = seat.id.split("-").pop();
+        seatEl.dataset.seatId = seat.id;
+        seatEl.onclick = () => toggleSeat(seat.id);
+        grid.appendChild(seatEl);
+      });
+
+      sectionDiv.appendChild(grid);
+      container.appendChild(sectionDiv);
+    }
+
+    function toggleSeat(seatId) {
+      const section = state.currentSection;
+      const direction = state.currentDirection;
+      if (!section || !direction) return;
+
+      const seat = state.seats[section][direction].find(s => s.id === seatId);
+      if (seat && seat.available) {
+        seat.selected = !seat.selected;
+        if (seat.selected) state.selected.add(seatId);
+        else state.selected.delete(seatId);
+        renderSections();
+        updateStats();
+      }
+    }
+
+    function updateStats() {
+      let selectedCount = 0;
+      let availableCount = 0;
+      let bookedCount = 0;
+      const section = state.currentSection;
+      const direction = state.currentDirection;
+      if (!section || !direction) return;
+
+      state.seats[section][direction].forEach(seat => {
+        if (seat.available) availableCount++;
+        else bookedCount++;
+        if (seat.selected) selectedCount++;
+      });
+
+      const totalSeats = state.seats[section][direction].length;
+      document.getElementById("seatStats").textContent =
+        `Total: ${totalSeats} | Available: ${availableCount} | Booked: ${bookedCount} | Selected: ${selectedCount}`;
+
+      document.getElementById("seatCount").textContent = `Selected Tickets: ${selectedCount}`;
+      const total = selectedCount * (priceMap[section] || 0);
+      document.getElementById("totalAmount").textContent = `Total Amount: ₹${total.toLocaleString('en-IN')}`;
+    }
+
+    document.getElementById("sectionSelect").addEventListener("change", (e) => {
+      state.currentSection = e.target.value;
+      document.getElementById("directionSelect").disabled = !state.currentSection;
+      state.selected.clear();
+      state.currentDirection = "";
+      renderSections();
+      updateStats();
+    });
+
+    document.getElementById("directionSelect").addEventListener("change", (e) => {
+      state.currentDirection = e.target.value;
+      state.selected.clear();
+      renderSections();
+      updateStats();
+    });
+
+    generateSeats();
+
+    const form = document.getElementById('bookingForm');
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      document.querySelectorAll('.error').forEach(el => el.style.display = 'none');
+      let valid = true;
+
+      if (!form.name.value.trim()) {
+        document.getElementById('nameError').style.display = 'inline';
+        valid = false;
+      }
+      if (!form.email.value.trim() || !form.email.value.includes('@')) {
+        document.getElementById('emailError').style.display = 'inline';
+        valid = false;
+      }
+      if (!form.phone.value.match(/^[6-9]\d{9}$/)) {
+        document.getElementById('phoneError').style.display = 'inline';
+        valid = false;
+      }
+      if (!form.date.value) {
+        document.getElementById('dateError').style.display = 'inline';
+        valid = false;
+      }
+      if (!form.time.value) {
+        document.getElementById('timeError').style.display = 'inline';
+        valid = false;
+      }
+
+      if (valid) {
+        const selectedSeats = Array.from(state.selected);
+        const totalAmount = selectedSeats.length * (priceMap[state.currentSection] || 0);
+
+        const bookingData = {
+          name: form.name.value.trim(),
+          email: form.email.value.trim(),
+          phone: form.phone.value.trim(),
+          date: form.date.value,
+          time: form.time.value,
+          section: state.currentSection,
+          direction: state.currentDirection,
+          selectedSeats,
+          totalAmount
+        };
+
+        localStorage.setItem("bookingData", JSON.stringify(bookingData));
+        window.location.href = "confirmation.html";
+      }
+    });
+  </script>
+</body>
+</html>
