@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Booking Confirmation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f8ff;
+      padding: 2rem;
+      color: #333;
+    }
+    .confirmation-box {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      max-width: 600px;
+      margin: auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+    h2 {
+      color: #00796b;
+    }
+    .data {
+      margin-bottom: 1rem;
+      line-height: 1.6;
+      text-align: left;
+    }
+    .highlight {
+      font-weight: bold;
+      color: #00796b;
+    }
+    .button-group {
+      margin-top: 20px;
+    }
+    .btn {
+      padding: 10px 20px;
+      margin: 0 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      color: white;
+      transition: 0.3s;
+      text-decoration: none;
+    }
+    .btn-home {
+      background-color: #f44336;
+    }
+    .btn-home:hover {
+      background-color: #c62828;
+    }
+    .btn-payment {
+      background-color: #4CAF50;
+    }
+    .btn-payment:hover {
+      background-color: #2e7d32;
+    }
+  </style>
+</head>
+<body>
+  <div class="confirmation-box">
+    <h2>Booking Confirmation</h2>
+    <div class="data" id="confirmationData"></div>
+    <div class="button-group">
+      <a href="index.html" class="btn btn-home">🏠 Go Home</a>
+      <a href="payment.html" class="btn btn-payment">💳 Proceed to Payment</a>
+    </div>
+  </div>
+
+  <script>
+    const data = JSON.parse(localStorage.getItem("bookingData"));
+    const container = document.getElementById("confirmationData");
+
+    if (data) {
+      container.innerHTML = `
+        <p><span class="highlight">Name:</span> ${data.name}</p>
+        <p><span class="highlight">Email:</span> ${data.email}</p>
+        <p><span class="highlight">Phone:</span> ${data.phone}</p>
+        <p><span class="highlight">Match Date:</span> ${data.date}</p>
+        <p><span class="highlight">Match Time:</span> ${data.time}</p>
+        <p><span class="highlight">Section:</span> ${data.section}</p>
+        <p><span class="highlight">Direction:</span> ${data.direction}</p>
+        <p><span class="highlight">Selected Seats:</span> ${data.selectedSeats.join(", ")}</p>
+        <p><span class="highlight">Total Amount Paid:</span> ₹${data.totalAmount.toLocaleString('en-IN')}</p>
+      `;
+      // Also save the ticketData for payment page
+      localStorage.setItem("ticketData", JSON.stringify({
+        section: data.section,
+        qty: data.selectedSeats.length,
+        total: data.totalAmount
+      }));
+    } else {
+      container.textContent = "No booking data found!";
+    }
+  </script>
+</body>
+</html>
