@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #e0f7fa, #e1bee7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+      width: 90%;
+      max-width: 520px;
+      text-align: center;
+      animation: fadeIn 1s ease;
+    }
+
+    h2 {
+      color: #6a1b9a;
+      margin-bottom: 20px;
+    }
+
+    .details {
+      background: #f3e5f5;
+      border-left: 5px solid #7b1fa2;
+      padding: 10px;
+      margin: 8px 0;
+      font-size: 15px;
+      color: #4a148c;
+      border-radius: 6px;
+      text-align: left;
+    }
+
+    .qr-images img {
+      width: 100%;
+      max-width: 280px;
+      border: 3px dashed #7b1fa2;
+      border-radius: 12px;
+      margin: 20px auto;
+      display: block;
+    }
+
+    .phone {
+      font-weight: bold;
+      font-size: 16px;
+      color: #00796b;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      font-size: 16px;
+      width: 100%;
+      max-width: 400px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    .error-message {
+      color: red;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    .btn {
+      background-color: #7b1fa2;
+      color: #fff;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+      margin-top: 15px;
+    }
+
+    .btn:hover {
+      background-color: #6a1b9a;
+    }
+
+    .nav-buttons {
+      margin-top: 30px;
+    }
+
+    .nav-buttons a {
+      display: inline-block;
+      padding: 10px 18px;
+      margin: 5px;
+      text-decoration: none;
+      color: #fff;
+      background: #009688;
+      border-radius: 8px;
+      transition: background 0.3s ease;
+    }
+
+    .nav-buttons a:hover {
+      background: #00796b;
+    }
+
+    #downloadBtn {
+      display: none;
+      background-color: #388e3c;
+      margin-top: 20px;
+    }
+
+    #downloadBtn:hover {
+      background-color: #2e7d32;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Complete Your Payment</h2>
+
+    <div class="details" id="nameInfo"></div>
+    <div class="details" id="emailInfo"></div>
+    <div class="details" id="phoneInfo"></div>
+    <div class="details" id="matchInfo"></div>
+    <div class="details" id="matchTimeInfo"></div>
+    <div class="details" id="ticketType"></div>
+    <div class="details" id="qtyInfo"></div>
+    <div class="details" id="amountInfo"></div>
+
+    <div class="qr-images">
+      <img src="https://media-hosting.imagekit.io/798e086e38944b84/IMG_20250505_232600.png?Expires=1841118146&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=OPVUsC1sdzBJgGW3WeSw9H6sElCCz42zcmXlQnu4~jXVdflEZjEXdck8Q0nRyYaQphWWz0pBQvPK9SVsQtIxX8J8leUmEapAYkk7c7QQw5WeEqOsdzidsedHdI2dCkMNTzqdcscwqYK5KBCZyLL5hmzYwJgQSsAHMxsG1YiscSiJfEjSG2YUfjJRER2QT6yj3c9sPtKnTGZStQyTHO2NKVb5jMZM~nfdBfyQaEKDrsyUrms71y-wrHAia1MqJrzSncodA6MyEEvJTLe4aZcOjmdQtPK4~Sm3IjjY7gKHyp6Rp8XtVjId4TQLlyV9SlDr39EpfYSAgBH7AfI8UPXoqw__" alt="QR Code">
+    </div>
+
+    <div class="phone">
+      Or pay via PhonePe / GPay:<br>
+      📞 +91 63041 03171
+    </div>
+
+    <input type="text" id="txnId" placeholder="Enter 23-character Transaction ID" required>
+    <div class="error-message" id="errorMsg"></div>
+
+    <button class="btn" onclick="confirmPayment()">Confirm Payment</button>
+    <button class="btn" id="downloadBtn" onclick="window.location.href='download.html'">🎟️ Download Ticket</button>
+
+    <div class="nav-buttons">
+      <a href="booking.html">← Back</a>
+      <a href="index.html">🏠 Home</a>
+    </div>
+  </div>
+
+  <script>
+    const bookingData = JSON.parse(localStorage.getItem('bookingData'));
+   
+    if (bookingData) {
+      const matchDate = new Date(bookingData.date);
+      const matchTime = new Date(`1970-01-01T${bookingData.time}:00`);
+     
+      // Format the date
+      const formattedDate = matchDate.toLocaleDateString('en-IN', {
+        weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+      });
+
+      // Format the time
+      const formattedTime = matchTime.toLocaleTimeString('en-IN', {
+        hour: '2-digit', minute: '2-digit'
+      });
+
+      document.getElementById('nameInfo').textContent = `Full Name: ${bookingData.name}`;
+      document.getElementById('emailInfo').textContent = `Email: ${bookingData.email}`;
+      document.getElementById('phoneInfo').textContent = `Phone: ${bookingData.phone}`;
+      document.getElementById('matchInfo').textContent = `Match: ${formattedDate}`;
+      document.getElementById('matchTimeInfo').textContent = `Match Time: ${formattedTime}`;
+      document.getElementById('ticketType').textContent = `Section: ${bookingData.section} (${bookingData.direction})`;
+      document.getElementById('qtyInfo').textContent = `Selected Seats: ${bookingData.selectedSeats.length} – [${bookingData.selectedSeats.join(", ")}]`;
+      document.getElementById('amountInfo').textContent = `Total Amount: ₹${bookingData.totalAmount.toLocaleString('en-IN')}`;
+    }
+
+    function confirmPayment() {
+      const txnId = document.getElementById("txnId").value.trim();
+      const errorMsg = document.getElementById("errorMsg");
+      errorMsg.textContent = "";
+
+      if (!txnId || txnId.length !== 23) {
+        errorMsg.textContent = "Transaction ID must be exactly 23 characters.";
+        return;
+      }
+
+      const paymentData = {
+        txnId,
+        paidTo: "PhonePe/GPay +91 63041 03171",
+        booking: bookingData
+      };
+
+      localStorage.setItem("paymentData", JSON.stringify(paymentData));
+      document.getElementById("downloadBtn").style.display = "inline-block";
+      errorMsg.style.color = "green";
+      errorMsg.textContent = "✅ Payment confirmed. You can now download your ticket!";
+    }
+  </script>
+</body>
+</html>
