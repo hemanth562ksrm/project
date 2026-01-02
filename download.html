@@ -2,149 +2,148 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Ticket Download</title>
+  <title>Your Ticket</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #d7ffd9, #fff);
-      margin: 0;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       padding: 20px;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      margin: 0;
     }
 
-    .ticket-box {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-      max-width: 600px;
+    .ticket {
+      background: linear-gradient(to bottom right, #ffffff, #fce4ec);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
       width: 100%;
-      padding: 30px;
+      max-width: 650px;
       text-align: center;
+      animation: fadeIn 0.9s ease;
+      border: 4px solid #ec407a;
     }
 
     h2 {
-      color: #2e7d32;
+      color: #c2185b;
+      font-size: 30px;
+      margin-bottom: 25px;
+      background: -webkit-linear-gradient(#d81b60, #8e24aa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
-    .info {
-      margin: 10px 0;
-      font-size: 16px;
-      color: #444;
+    .ticket-detail {
+      background: #fff3f7;
+      border-left: 6px solid #ec407a;
+      margin: 12px 0;
+      padding: 14px 18px;
+      text-align: left;
+      color: #880e4f;
+      font-weight: 500;
+      border-radius: 10px;
+      box-shadow: inset 0 0 5px #f8bbd0;
     }
 
-    .highlight {
-      font-weight: bold;
-      color: #000;
+    .qr {
+      margin: 30px 0 15px;
     }
 
-    .download-btn {
-      margin-top: 20px;
-      padding: 12px 24px;
-      background-color: #007bff;
+    .qr img {
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 5px dashed #ec407a;
+      background-color: #fff;
+      padding: 10px;
+    }
+
+    button {
+      background: linear-gradient(to right, #f06292, #ab47bc);
       color: white;
       border: none;
-      border-radius: 8px;
+      padding: 14px 32px;
+      border-radius: 14px;
       font-size: 16px;
+      font-weight: bold;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      margin-top: 25px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s;
     }
 
-    .download-btn:hover {
-      background-color: #0056b3;
+    button:hover {
+      transform: scale(1.05);
     }
 
-    .nav-buttons {
-      margin-top: 20px;
-    }
-
-    .nav-buttons a {
-      margin: 0 10px;
-      background-color: #444;
-      color: white;
-      padding: 8px 18px;
-      border-radius: 6px;
-      text-decoration: none;
+    .footer {
+      margin-top: 25px;
+      color: #ad1457;
       font-size: 14px;
-      transition: background 0.3s ease;
     }
 
-    .nav-buttons a:hover {
-      background-color: #000;
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
 
-  <div class="ticket-box" id="ticketBox">
-    <h2>Your Ticket is Confirmed ✅</h2>
-    <div class="info">👤 Name: <span class="highlight" id="name"></span></div>
-    <div class="info">📧 Email: <span class="highlight" id="email"></span></div>
-    <div class="info">📱 Phone: <span class="highlight" id="phone"></span></div>
-    <div class="info">🗓️ Match Date: <span class="highlight" id="matchDate"></span></div>
-    <div class="info">⏰ Match Time: <span class="highlight" id="matchTime"></span></div>
-    <div class="info">🎟️ Section: <span class="highlight" id="section"></span></div>
-    <div class="info">🧭 Direction: <span class="highlight" id="direction"></span></div>
-    <div class="info">🔢 Quantity: <span class="highlight" id="qty"></span></div>
-    <div class="info">💺 Seats: <span class="highlight" id="seats"></span></div>
-    <div class="info">💸 Total Amount: ₹<span class="highlight" id="total"></span></div>
-    <div class="info">🧾 Transaction ID: <span class="highlight" id="txnId"></span></div>
+  <div class="ticket" id="ticketContent">
+    <h2>🎉 Your Colorful Stadium Ticket</h2>
 
-    <button class="download-btn" onclick="downloadTicket()">download tickets</button>
+    <div class="ticket-detail" id="ticketName"></div>
+    <div class="ticket-detail" id="ticketMatch"></div>
+    <div class="ticket-detail" id="ticketTime"></div>
+    <div class="ticket-detail" id="ticketSection"></div>
+    <div class="ticket-detail" id="ticketSeats"></div>
+    <div class="ticket-detail" id="ticketAmount"></div>
+    <div class="ticket-detail" id="ticketTxnId"></div>
 
-   
+    <div class="qr">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=Ticket%20Confirmed" alt="QR Code">
+    </div>
+
+    <button onclick="window.print()">🖨️ Print / Save Ticket</button>
+
+    <div class="footer">
+      🎫 Present this ticket at the stadium entry. Enjoy the match!
+    </div>
   </div>
 
   <script>
-    const paymentData = JSON.parse(localStorage.getItem('paymentData'));
+    const paymentData = JSON.parse(localStorage.getItem("paymentData"));
 
-    if (!paymentData || !paymentData.booking) {
-      alert("No payment data found. Please complete your payment first.");
-      window.location.href = "index.html";
-    }
+    if (paymentData && paymentData.booking) {
+      const booking = paymentData.booking;
 
-    const booking = paymentData.booking;
+      const matchDate = new Date(booking.date);
+      const matchTime = new Date(`1970-01-01T${booking.time}:00`);
 
-    const matchDate = new Date(booking.date);
-    const matchTime = new Date(`1970-01-01T${booking.time}:00`);
+      const formattedDate = matchDate.toLocaleDateString('en-IN', {
+        weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+      });
 
-    document.getElementById("name").textContent = booking.name || "N/A";
-    document.getElementById("email").textContent = booking.email || "N/A";
-    document.getElementById("phone").textContent = booking.phone || "N/A";
-    document.getElementById("matchDate").textContent = matchDate.toLocaleDateString("en-IN", {
-      weekday: "long", year: "numeric", month: "long", day: "numeric"
-    });
-    document.getElementById("matchTime").textContent = matchTime.toLocaleTimeString("en-IN", {
-      hour: "2-digit", minute: "2-digit"
-    });
-    document.getElementById("section").textContent = booking.section || "N/A";
-    document.getElementById("direction").textContent = booking.direction || "N/A";
-    document.getElementById("qty").textContent = booking.selectedSeats?.length || "0";
-    document.getElementById("seats").textContent = booking.selectedSeats?.join(", ") || "Not Assigned";
-    document.getElementById("total").textContent = booking.totalAmount?.toLocaleString("en-IN") || "0";
-    document.getElementById("txnId").textContent = paymentData.txnId || "N/A";
+      const formattedTime = matchTime.toLocaleTimeString('en-IN', {
+        hour: '2-digit', minute: '2-digit'
+      });
 
-    function downloadTicket() {
-      const ticketBox = document.getElementById("ticketBox");
-      const ticketContent = ticketBox.innerHTML;
-
-      const win = window.open("", "Print Ticket");
-      win.document.write(`
-        <html>
-        <head><title>Download Ticket</title></head>
-        <body style="font-family: sans-serif; padding: 20px;">${ticketContent}</body>
-        </html>
-      `);
-      win.document.close();
-      win.print();
+      document.getElementById("ticketName").textContent = `👤 Name: ${booking.name}`;
+      document.getElementById("ticketMatch").textContent = `📅 Match Date: ${formattedDate}`;
+      document.getElementById("ticketTime").textContent = `⏰ Time: ${formattedTime}`;
+      document.getElementById("ticketSection").textContent = `📍 Section: ${booking.section} (${booking.direction})`;
+      document.getElementById("ticketSeats").textContent = `💺 Seats: ${booking.selectedSeats.join(", ")}`;
+      document.getElementById("ticketAmount").textContent = `💰 Paid: ₹${booking.totalAmount.toLocaleString('en-IN')}`;
+      document.getElementById("ticketTxnId").textContent = `🔑 Txn ID: ${paymentData.txnId}`;
+    } else {
+      document.getElementById("ticketContent").innerHTML = "<p style='color: red; font-weight: bold;'>❌ No ticket data found. Please complete payment first.</p>";
     }
   </script>
-
 </body>
 </html>
-
-
-
